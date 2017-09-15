@@ -1,0 +1,125 @@
+﻿@{
+    Layout = null;
+}
+
+
+
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title> 登录 </title>
+
+
+    <!--[if lt IE 9]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+    <link href="~/content/css/login.min.css" rel="stylesheet" />
+    <link href="~/content/css/login.css" rel="stylesheet" />
+</head>
+<body class="external-page sb-l-c sb-r-c">
+    <div id="main" class="animated fadeIn">
+
+        <!-- Start: Content-Wrapper -->
+        <section id="content_wrapper">
+
+            <!-- begin canvas animation bg -->
+            <!-- Begin: Content -->
+            <section id="content">
+
+                <div class="admin-form theme-info" id="login1">
+                    <div class="panel panel-info mt10 br-n">
+
+                        <div class="panel-heading heading-border bg-white">
+                            <span class="panel-title">
+                                <i class="fa fa-sign-in"></i>登录JuCheap
+                            </span>
+                        </div>
+
+                        <!-- end .form-header section -->
+                        <form action="/Adm/User/Login" class="form-horizontal" id="loginFrm" method="post">
+                            <input id="ReturnUrl" name="ReturnUrl" type="hidden" value="" />
+                            <div class="panel-body bg-light p30">
+                                <div class="row">
+                                    <div class="col-sm-7 pr30">
+                                        <div class="section">
+                                            <label class="field-label text-muted fs18 mb10">账号</label>
+                                            <label for="LoginName" class="field prepend-icon">
+                                                <input autofocus="" class="gui-input" data-val="true" data-val-maxlength="登录账号长度不能超过20个字符" data-val-maxlength-max="20" data-val-minlength="登录账号长度不能少于4个字符" data-val-minlength-min="4" data-val-regex="登录账号必须是字母、数字或者下划线的组合" data-val-regex-pattern="^[^_][a-zA-Z0-9_]*$" data-val-required="登录账号不能为空" id="LoginName" name="LoginName" placeholder="请输入用户名" type="text" value="admin" />
+                                                <label for="LoginName" class="field-icon">
+                                                    <i class="fa fa-user"></i>
+                                                </label>
+                                            </label>
+                                            <span class="field-validation-valid" data-valmsg-for="LoginName" data-valmsg-replace="true"></span>
+                                        </div>
+                                        <!-- end section -->
+
+                                        <div class="section">
+                                            <label class="field-label text-muted fs18 mb10">密码</label>
+
+                                            <label for="Password" class="field prepend-icon">
+                                                <input class="gui-input" data-val="true" data-val-maxlength="登录密码长度不能超过12个字符" data-val-maxlength-max="12" data-val-minlength="登录密码长度不能少于6个字符" data-val-minlength-min="6" data-val-required="登录密码不能为空" id="Password" name="Password" placeholder="请输入密码" type="password" value="qwaszx" />
+                                                <label for="Password" class="field-icon">
+                                                    <i class="fa fa-lock"></i>
+                                                </label>
+                                                <span class="field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                            </label>
+                                        </div>
+                                        <!-- end section -->
+
+                                    </div>
+                                    <div class="col-sm-5 br-l br-grey pl30">
+                                        <h3 class="mb25">JuCheap的技术:</h3>
+                                        <p class="mb15">
+                                            <span class="fa fa-check text-success pr5"></span>MVC+Identity+EF+T4
+                                        </p>
+                                        <p class="mb15">
+                                            <span class="fa fa-check text-success pr5"></span>SimpleInjector/AutoMapper
+                                        </p>
+                                        <p class="mb15">
+                                            <span class="fa fa-check text-success pr5"></span>异步编程
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end .form-body section -->
+                            <div class="panel-footer clearfix p10 ph15">
+                                <input id="btnLogin" type="submit" class="btn btn-primary mr10 pull-right" value="登录">
+                                <label class="switch ib switch-primary pull-left input-align mt10">
+                                    <input type="checkbox" id="RememberMe" name="RememberMe" value="true">
+                                    <label for="RememberMe" data-on="YES" data-off="NO"></label>
+                                    <span>记住我</span>
+                                </label>
+                            </div>
+                            <!-- end .form-footer section -->
+                        </form>
+                    </div>
+                </div>
+
+            </section>
+            <!-- End: Content -->
+
+        </section>
+        <!-- End: Content-Wrapper -->
+
+    </div>
+    <script src="~/content/js/base.js"></script>
+    <script src="~/content/js/jqueryValidate.js"></script>
+    <script>
+        $("#btnLogin").click(function () {
+            if ($("#loginFrm").validate().form()) {
+                $(this).button("loading");
+                return true;
+            }
+            return false;
+        });
+    </script>
+</body>
+</html>

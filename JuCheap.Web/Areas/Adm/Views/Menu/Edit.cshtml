@@ -1,0 +1,114 @@
+﻿@using System.Text
+@using Hk.QrPay.Service.Dto
+@using Hk.QrPay.Service.Enum
+@model MenuDto
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="/content/css/content-base.css" rel="stylesheet" />
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>添加菜单</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="ibox-content">
+                <form action="@Request.Url.PathAndQuery" class="form-horizontal" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <label for="ParentName">上级菜单</label>：</label>
+                        <div class="col-sm-8">
+
+                            <div class="input-group">
+                                <input class="form-control" id="ParentName" name="ParentName" placeholder="上级菜单" type="text" value="" />
+                                <input id="ParentId" name="ParentId" type="hidden" value="" />
+                                <span class="field-validation-valid" data-valmsg-for="ParentName" data-valmsg-replace="true"></span>
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-white dropdown-toggle" data-toggle="dropdown">
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+                                </div>
+                                <!-- /btn-group -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <label for="Id"></label>
+                        </label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-val="true" data-val-maxlength="菜单名称长度不能超过20个字符" data-val-maxlength-max="20" data-val-minlength="菜单名称长度不能少于2个字符" data-val-minlength-min="2" data-val-required="菜单名称不能为空" id="Id" name="Id" placeholder="菜单名称" type="hidden" value="" />
+                            <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            @Html.LabelFor(item=>item.Name)：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-val="true" data-val-maxlength="菜单名称长度不能超过20个字符" data-val-maxlength-max="20" data-val-minlength="菜单名称长度不能少于2个字符" data-val-minlength-min="2" data-val-required="菜单名称不能为空" id="Name" name="Name" placeholder="菜单名称" type="text" value="" />
+                            <span class="field-validation-valid" data-valmsg-for="Name" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <label for="Url">菜单网址</label>：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-val="true" data-val-maxlength="菜单网址长度不能超过300个字符" data-val-maxlength-max="300" data-val-required="菜单网址不能为空" id="Url" name="Url" placeholder="URL地址" type="text" value="" />
+                            <span class="field-validation-valid" data-valmsg-for="Url" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <label for="Order">排序数字</label>：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-val="true" data-val-number="字段 排序数字 必须是一个数字。" data-val-required="排序数字 字段是必需的。" id="Order" name="Order" placeholder="排序" type="text" value="0" />
+                            <span class="field-validation-valid" data-valmsg-for="Order" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            <label for="ExecuEvent">菜单动作</label>：</label>
+                        <div class="col-sm-8">
+                            <input class="form-control" data-val="true" id="ExecuEvent" name="ExecuEvent" placeholder="动作" type="text" />
+                            <span class="field-validation-valid" data-valmsg-for="Order" data-valmsg-replace="true"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-8">
+                            <button class="btn btn-info" type="submit" id="btnSave">保存</button>
+                            <button class="btn btn-white" type="button" id="btnBack" data-type="url">返回</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/Content/js/base.js"></script>
+    <script src="~/content/js/jqueryValidate.js"></script>
+    <script src="~/content/js/menu.js"></script>
+    <script src="~/content/js/action.js"></script>
+
+
+</body>
+</html>
+
