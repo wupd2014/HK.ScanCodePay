@@ -149,6 +149,10 @@
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.WebPages3.0, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>dll\System.Web.WebPages\System.Web.WebPages3.0.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
@@ -162,9 +166,6 @@
   <ItemGroup>
     <Reference Include="System.Web.Razor">
       <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Webpages">
-      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Webpages.Deployment">
       <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.3\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
@@ -240,6 +241,8 @@
     <Content Include="content\js\plugins\layer\skin\layer.css" />
     <Content Include="content\js\plugins\layer\skin\layer.ext.css" />
     <Content Include="content\js\validate.min.js" />
+    <Content Include="dll\System.Web.WebPages\System.Web.WebPages2.0.dll" />
+    <Content Include="dll\System.Web.WebPages\System.Web.WebPages3.0.dll" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Images\ico\apple-touch-icon-114-precomposed.png" />

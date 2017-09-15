@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hk.QrPay.Web", "JuCheap.Web
 		{F6160CD1-D241-4293-92F5-451749C7FC3A} = {F6160CD1-D241-4293-92F5-451749C7FC3A}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MvcApplication1", "MvcApplication1\MvcApplication1.csproj", "{350F9099-9577-4494-BD73-568F100115D2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{ECE655CF-9EB4-42C9-A689-63CB6F563A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ECE655CF-9EB4-42C9-A689-63CB6F563A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ECE655CF-9EB4-42C9-A689-63CB6F563A10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{350F9099-9577-4494-BD73-568F100115D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{350F9099-9577-4494-BD73-568F100115D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{350F9099-9577-4494-BD73-568F100115D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{350F9099-9577-4494-BD73-568F100115D2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
