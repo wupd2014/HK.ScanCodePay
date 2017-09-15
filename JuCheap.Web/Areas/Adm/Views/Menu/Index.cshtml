@@ -40,7 +40,8 @@
                         List<MenuDto> btns = ViewBag.MyButtons;
                         foreach (var btn in btns)
                         {
-                        <button type="button" class="btn btn-success m-b-10" onclick="DoWork(this,'@btn.Url','@ViewContext.RouteData.Values["moudleId"]','@btn.ParentId','@btn.Id','@btn.Id')">@btn.Name</button>
+                            string ClassName = string.IsNullOrEmpty(btn.ClassName) ? "btn btn-success m-b-10" : btn.ClassName;
+                            <button type="button" class="@ClassName" onclick="DoWork(this,'@btn.Url','@ViewContext.RouteData.Values["moudleId"]','@btn.ParentId','@btn.Id','@btn.ExecuEvent')"><i class="@btn.Icon"></i>@btn.Name</button>
                         }
                     }
 
@@ -73,8 +74,25 @@
             XPage.Search(json);
         }
 
-        function DoWork(obj, url, moduleId, parentId, Id) {
+        function DoWork(obj, url, moduleId, parentId, Id, func) {
             //$(obj).button("loading");
+            //var row = JucheapGrid.GetData();
+            //if (row != null) {
+            //    $("#btnEdit").button("loading");
+            //    window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id + "/" + row.Id;
+            //} else {
+            //    parent.layer.alert("请选择要编辑的数据");
+            //}
+            //func(obj, url, moduleId, parentId, Id)
+            console.log(func + "(" + url + "," + moduleId + ", " + parentId + ", " + Id + ")");
+            eval(func + "('" + url + "','" + moduleId + "', '" + parentId + "', '" + Id + "')");
+        }
+        function Add(url, moduleId, parentId, Id) {
+            //$("#btnAdd").button("loading");
+            window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id;
+        }
+
+        function Edit(url, moduleId, parentId, Id) { //编辑
             var row = JucheapGrid.GetData();
             if (row != null) {
                 $("#btnEdit").button("loading");
@@ -82,24 +100,9 @@
             } else {
                 parent.layer.alert("请选择要编辑的数据");
             }
-
-        }
-        function addModel() {
-            $("#btnAdd").button("loading");
-            window.location.href = "/Adm/Menu/Add/@Request["moudleId"]/@Request["menuId"]/@Request["btnId"]";
         }
 
-        function editModel() { //编辑
-            var row = JucheapGrid.GetData();
-            if (row != null) {
-                $("#btnEdit").button("loading");
-                window.location.href = "/Adm/Menu/Edit/" + row.Id;
-            } else {
-                parent.layer.alert("请选择要编辑的数据");
-            }
-        }
-
-        function delData() { //删除
+        function Del() { //删除
             XPage.DelData("/Menu/Delete");
         }
 
