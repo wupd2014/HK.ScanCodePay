@@ -76,7 +76,9 @@
     <Compile Include="Extentions\StringExtention.cs" />
     <Compile Include="Extentions\TypeExtensions.cs" />
     <Compile Include="IdGeneratorHelper.cs" />
-    <Compile Include="Log\Logger.cs" />
+    <Compile Include="Log\Logger.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Memcached\MemcachedClientSingleton.cs" />
     <Compile Include="Memcached\MemcachedHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
