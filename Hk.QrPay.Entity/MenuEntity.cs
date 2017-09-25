@@ -45,5 +45,14 @@ namespace Hk.QrPay.Entity
         /// 执行的事件
         /// </summary>
         public string ExecuEvent { get; set; }
+
+        /// <summary>
+        /// 菜单或者样式
+        /// </summary>
+        public string ClassName { get; set; }
+        /// <summary>
+        /// 菜单或者按钮图标
+        /// </summary>
+        public string Icon { get; set; }
     }
 }

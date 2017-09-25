@@ -2,7 +2,7 @@
     Layout = null;
 }
 
-
+@using System.Configuration;
 
 
 
@@ -39,7 +39,8 @@
 
                         <div class="panel-heading heading-border bg-white">
                             <span class="panel-title">
-                                <i class="fa fa-sign-in"></i>登录JuCheap
+                                <i class="fa fa-sign-in"></i>登录 @System.Configuration.ConfigurationManager.AppSettings["logo"]
+
                             </span>
                         </div>
 
@@ -76,7 +77,7 @@
 
                                     </div>
                                     <div class="col-sm-5 br-l br-grey pl30">
-                                        <h3 class="mb25">JuCheap的技术:</h3>
+                                        <h3 class="mb25">@System.Configuration.ConfigurationManager.AppSettings["logo"]的技术:</h3>
                                         <p class="mb15">
                                             <span class="fa fa-check text-success pr5"></span>MVC+Identity+EF+T4
                                         </p>

@@ -18,17 +18,7 @@
         manager.StartNewFile("I"+name+"Service.Partial.cs", string.Empty);
 #>
 
-/*******************************************************************************
-* Copyright (C)  Hk.QrPay.Com
-* 
-* Author: dj.wong
-* Create Date: <#=DateTime.Now#>
-* Description: Automated building by service@Hk.QrPay.com 
-* 
-* Revision History:
-* Date         Author               Description
-* 2017-08-02   dj.wong              optimization
-*********************************************************************************/
+
 
 using System;
 using System.Collections.Generic;

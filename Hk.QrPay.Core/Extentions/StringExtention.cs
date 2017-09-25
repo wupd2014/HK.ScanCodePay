@@ -182,6 +182,7 @@ namespace Hk.QrPay.Core.Extentions
             return sBuilder.ToString();
         }
 
+
         /// <summary>
         /// 将对象序列化成XML
         /// </summary>

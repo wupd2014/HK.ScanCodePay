@@ -1,1 +1,187 @@
-﻿
+﻿@using Hk.QrPay.Service.Dto
+@model UserDto
+@{
+    Layout = null;
+}
+@*<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="~/content/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/content/js/plugins/multi-select/css/multi-select.css" rel="stylesheet" />
+    <style>
+        .custom-header {
+            text-align: center;
+            color: #fff;
+        }
+    </style>
+</head>
+<body style="padding-left: 80px; width: 80%">
+    <!-- start -->
+    <form class="form-horizontal">
+        <div class="form-group">
+            <div class="row">
+                <div class="col-sm-4"></div>
+                <div class="col-sm-4">
+                    <select id='role-options' multiple='multiple'>
+                    </select>
+                </div>
+                <div class="col-sm-4"></div>
+            </div>
+            <div class="row">
+                <button type="button" class="btn btn-info"><i class="fa fa-user"></i>用户角色授权</button>
+            </div>
+        </div>
+    </form>
+    <!-- ends -->
+    <!-- jQuery -->
+    <script src="~/content/js/jquery.min.js"></script>
+    <!-- Bootstrap JavaScript -->
+    <script src="~/content/js/bootstrap.min.js"></script>
+    <script src="~/content/js/plugins/multi-select/js/jquery.multi-select.js"></script>
+    <script type="text/javascript">
+        // run pre selected options
+        var roles=[];
+        var opList="";
+        var option= '<option value={Id} selected>{Name}</option>'
+        function CreateOption(obj,selected)
+        {
+            return  '<option value='+obj.Id+' '+selected+'>'+obj.Name+'</option>';
+        }
+
+        function opListAddRange(objs,selected){
+            for (var i = 0; i < objs.length; i++) {
+                opList+=CreateOption(objs[i],selected);
+            }
+        }
+        window.onload=function(){
+            //用户已有角色
+            $.ajax({
+                type: 'get',
+                url: '/Adm/User/GetMyRoles?start=0&length=@Int32.MaxValue&keywords=&orderBy=Name&orderDir=asc',
+                async:false,
+                data: { "moudleId": 0, "menuId": 0, "btnId": 0, "id":@Model.Id },
+                success: function (res) {
+                    var roles_selected= res.data;
+                    opListAddRange(roles_selected,"selected");
+                }
+            })
+            //用户未有角色
+            $.ajax({
+                type: 'get',
+                url: '/Adm/User/GetNotMyRoles?start=0&length=@Int32.MaxValue&keywords=&orderBy=Name&orderDir=asc',
+                data: { "moudleId": 0, "menuId": 0, "btnId": 0, "id": @Model.Id},
+                async:false,
+                success: function (res) {
+                    var roles_unselected= res.data;
+                    console.log(roles_unselected);
+                    opListAddRange(roles_unselected,"");
+                }
+            })
+           
+            $("#role-options").html(opList).multiSelect({
+                selectableHeader: "<div class='custom-header btn-info'>可用角色</div>",
+                selectionHeader: "<div class='custom-header btn-info'>已选角色</div>"
+            });
+        }
+
+    </script>
+</body>
+
+</html>*@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>权限</title>
+    <link href="~/content/css/public.css" rel="stylesheet" />
+    <link href="~/content/css/iconfont.css" rel="stylesheet" />
+    <link href="~/content/css/groupRule.css" rel="stylesheet" />
+    <style>
+        .btn-info {
+            background-color: #23c6c8;
+            border-color: #23c6c8;
+            color: #fff;
+        }
+    </style>
+</head>
+<body style="padding: 50px">
+    <ul i class="auth-list">
+        <li>
+            <p class="authitem auth1 pr" data-id="1"><span><i class="iconfont">㄄</i>授权用户：</span>张三、里斯</p>
+        </li>
+    </ul>
+    <ul id="groupRule">
+    </ul>
+    <div style="margin-top: 20px;">
+        <input type="button" class="btn btn-info " value="保存" name="btnSave" />
+        <input type="button" class="btn btn-info" value="取消" name="btnCancle" />
+    </div>
+    <script src="~/content/js/jquery-2.2.4.js"></script>
+    <script src="~/content/js/groupRule.js"></script>
+    <script type="text/javascript">
+        //应该是通过ajax请求过来的
+        var data = [];
+        function opListAddRange(objs,selected){
+            for (var i = 0; i < objs.length; i++) {
+                data.push({
+                    "id":objs[i].Id,
+                    "text":objs[i].Name,
+                    "spread":false,
+                    "checked":selected,
+                    "childs":[]
+                });
+            }
+        }
+        window.onload=function(){
+            //用户已有角色
+            $.ajax({
+                type: 'get',
+                url: '/Adm/User/GetMyRoles?start=0&length=@Int32.MaxValue&keywords=&orderBy=Name&orderDir=asc',
+                async:false,
+                data: { "moudleId": 0, "menuId": 0, "btnId": 0, "id":@Model.Id },
+                success: function (res) {
+                    var roles_selected= res.data;
+                    opListAddRange(roles_selected,true);
+                }
+            })
+            //用户未有角色
+            $.ajax({
+                type: 'get',
+                url: '/Adm/User/GetNotMyRoles?start=0&length=@Int32.MaxValue&keywords=&orderBy=Name&orderDir=asc',
+                data: { "moudleId": 0, "menuId": 0, "btnId": 0, "id": @Model.Id},
+                async:false,
+                success: function (res) {
+                    var roles_unselected= res.data;
+                    console.log(roles_unselected);
+                    opListAddRange(roles_unselected,false);
+                }
+            })
+            console.log(data);
+            $("#groupRule").groupRule({ title: "角色列表", titleIcon: "&#x3104;", data: data, effect: 200,AllSelected_True:function(){
+                alert('1');
+            } });
+
+            $("input[name=btnSave]").click(function(){
+                var roles=[];
+                $("i").filter(".checked").each(function(){
+                    roles.push($(this).attr("mhref"));
+                });
+
+                $.post("@Url.Action("SetUserRole")",{id:@Model.Id,roles:roles},function(res){
+                    
+                });
+            });
+       
+        }
+    </script>
+</body>
+</html>

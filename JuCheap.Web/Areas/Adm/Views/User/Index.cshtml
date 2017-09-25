@@ -2,110 +2,163 @@
 @using Hk.QrPay.Service.Dto
 
 @{
-    Layout = "/Areas/Adm/Views/Shared/_Layout_Body.cshtml";
-}
-@section StylesBefore{
-@Styles.Render("~/Template/Admin/jucheap/Css/DataTable")
-}
-@section Scripts{
-    @Scripts.Render("~/JS/Admin/jucheap/DataTable")
-
-    <script>
-        var grid = null;
-        function reload() {
-            $("#go_search").trigger("click");
-        }
-
-        $(function() {
-            var cols = [
-                { data: "Id", orderable: false },
-                { data: "LoginName", name: "LoginName", orderable: true },
-                { data: "RealName", name: "RealName", orderable: true },
-                { data: "Email", name: "Email", orderable: true },
-                { data: function (e) { return e.StatusName; }, name: "Status", orderable: true },
-                {
-                    data: function(e) {
-                        return e.CreateDateTime.toString().getDate();
-                    }, name: "CreateDateTime",
-                    orderable: true
-                }
-            ];
-            var config = {
-                id: "table_server",
-                url: "@Url.Action("GetList",@ViewContext.RouteData.Values)",
-                columns: cols,
-                order: [[5, "desc"]]
-            };
-            grid = new jucheap.grid(config);
-            grid.load();
-
-            $(".box-refresh").click(function() {
-                grid.reload();
-            });
-        });
-    </script>
+    Layout = null;
 }
 
-<div class="row">
-    <div class="col-lg-12">
-        <div class="hidden" id="hidden_filter">
-            @* 把需要搜索的条件放到hidden里面，在table格式化完成的时候直接调用$.html()赋值，免去了在js拼接标签的麻烦 *@
-            <div class="row" style="margin-right:0;">
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-                        <label class="sr-only" for="keywords">关键字</label>
-                        <input type="text" class="form-control" id="keywords" name="keywords" placeholder="登陆名/真实名" maxlength="20" />
-                    </div>
-                    <button type="button" class="btn btn-success" name="go_search">搜索</button>
-                </form>
+
+<!DOCTYPE html>
+<html>
+
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="~/content/css/content-base.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/jqgrid/ui.jqgrid.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/datepicker/datepicker3.css" rel="stylesheet" />
+</head>
+
+<body class="gray-bg">
+    
+
+
+
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>用户管理</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
             </div>
         </div>
-        <section class="panel">
-            <header class="panel-heading" style="margin-bottom: 10px;">
-                &nbsp;
-                <span class="tools pull-left">
-                    @if (ViewBag.MyButtons != null)
-                    {
-                        List<MenuDto> btns = ViewBag.MyButtons;
-                        StringBuilder sb = new StringBuilder();
-                        foreach (var btn in btns)
-                        {
-                            sb.AppendFormat("<button type=\"button\" class=\"btn btn-success m-b-10\" onclick=\"jucheap.goAction(this,  '{0}', '{1}','{2}', '{3}',grid)\">{4}</button>&nbsp;&nbsp;", ViewContext.RouteData.Values["moudleId"], btn.ParentId, btn.Id, btn.Url, btn.Name);
-                        }
-                        @(new MvcHtmlString(sb.ToString()))
-                    }
-                </span>
-                <span class="tools pull-right">
-                    <a class="fa fa-repeat box-refresh" href="javascript:;"></a>
-                    <a class="t-close fa fa-times" href="javascript:;"></a>
-                </span>
-            </header>
-            <table id="table_server" class="table responsive-data-table data-table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">
-                            选择
-                        </th>
-                        <th>
-                            账号
-                        </th>
-                        <th>
-                            姓名
-                        </th>
-                        <th>
-                            邮箱
-                        </th>
-                        <th>
-                            状态
-                        </th>
-                        <th>
-                            创建日期
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-        </section>
-    </div>
+        <div class="ibox-content">
+            <div class="form-group">
+                @*<button id="btnAdd" type="button" class="btn btn-primary " onclick="addModel()"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                <button id="btnEdit" type="button" class="btn btn-info " onclick="editModel()"><i class="fa fa-pencil"></i> 编辑</button>
+                <button id="btnDel" type="button" class="btn btn-danger " onclick="delData()">
+                    <i class="fa fa-remove"></i>&nbsp;&nbsp;<span class="bold">删除</span>
+                </button>
+                <button id="btnSetRole" type="button" class="btn btn-info "><i class="fa fa-user"></i> 角色授权</button>
+                <button id="btnResetPwd" class="btn btn-warning"><i class="fa fa-undo"></i> 重置密码</button>*@
+                     @if (ViewBag.MyButtons != null)
+                     {
+                         List<MenuDto> btns = ViewBag.MyButtons;
+                         foreach (var btn in btns)
+                         {
+                             string ClassName = string.IsNullOrEmpty(btn.ClassName) ? "btn btn-success m-b-10" : btn.ClassName;
+                        <button type="button" class="@ClassName" onclick="DoWork(this,'@btn.Url','@ViewContext.RouteData.Values["moudleId"]','@btn.ParentId','@btn.Id','@btn.ExecuEvent')"><i class="@btn.Icon"></i>@btn.Name</button>
+                         }
+                     }
+            </div>
 
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+                    <span class="input-group-btn">
+                        <button id="btnSearch" class="btn btn btn-primary" type="button"> <i class="fa fa-search"></i> 搜索</button>
+                    </span>
+                </div>
+            </div>
+
+            <div class="jqGrid_wrapper">
+                <table id="table_list"></table>
+                <div id="pager_list"></div>
+            </div>
+        </div>
+    </div>
 </div>
+
+    <script src="~/Content/js/base.js"></script>
+    <script src="~/content/js/list.js"></script>
+    <script src="~/Content/js/plugins/datepicker/bootstrap-datepicker.js"></script>
+
+    <script>
+        function searchData() { //搜索
+            var json = {
+                keywords: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+
+        function DoWork(obj, url, moduleId, parentId, Id, func) {
+            console.log(func + "(" + url + "," + moduleId + ", " + parentId + ", " + Id + ")");
+            eval(func + "('" + url + "','" + moduleId + "', '" + parentId + "', '" + Id + "')");
+        }
+        function Add(url, moduleId, parentId, Id) {
+            //$("#btnAdd").button("loading");
+            window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id;
+        }
+
+        function Edit(url, moduleId, parentId, Id) { //编辑
+            var row = JucheapGrid.GetData();
+            if (row != null) {
+                $("#btnEdit").button("loading");
+                window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id + "/" + row.Id;
+            } else {
+                parent.layer.alert("请选择要编辑的数据");
+            }
+        }
+
+        function delData() { //删除
+            XPage.DelData("/User/Delete");
+        }
+
+        function SetAuthen() {
+            var row = JucheapGrid.GetData();
+            if (row != null) {
+                //弹出即全屏
+                var layerIndex = parent.layer.open({
+                    title: "用户角色授权",
+                    type: 2,
+                    content: '/Adm/User/Authen/' + row.Id + "?username=" + row.LoginName,
+                    area: ['800px', '500px']
+                });
+                parent.layer(layerIndex);
+            } else {
+                parent.layer.alert("请选择要授权的用户");
+            }
+        }
+
+        $(document).ready(function () {
+            var config = {
+                title: '用户列表',
+                url: '/Adm/User/GetListWithPager',
+                colNames: ['主键', '登录名', '真实姓名', '邮箱', '注册时间'],
+                colModel: [
+                    { name: 'Id', index: 'Id', width: 60, key: true, hidden: true },
+                    { name: 'LoginName', index: 'LoginName', width: 60 },
+                    { name: 'RealName', index: 'RealName', width: 60 },
+                    { name: 'Email', index: 'Email', width: 60 },
+                    {
+                        name: 'CreateDateTime',
+                        index: 'CreateDateTime',
+                        width: 60,
+                        formatter: function (cellValue, options, rowObject) {
+                            return cellValue.getDate();
+                        }
+                    }
+                ]
+            };
+            JucheapGrid.Load(config);
+            $("#btnSearch").bind("click", searchData);
+
+            $("#btnResetPwd").bind("click", function () {
+                var row = JucheapGrid.GetData();
+                if (row != null) {
+                    $(this).button("loading");
+                    window.location.href = "/User/ResetPwd/" + row.Id;
+                } else {
+                    parent.layer.alert("请选择要重置密码的用户");
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>
 

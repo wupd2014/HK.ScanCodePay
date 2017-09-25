@@ -1,16 +1,6 @@
 
 
-/*******************************************************************************
-* Copyright (C)  Hk.QrPay.Com
-* 
-* Author: dj.wong
-* Create Date: 09/13/2017 17:10:00
-* Description: Automated building by service@Hk.QrPay.com 
-* 
-* Revision History:
-* Date         Author               Description
-* 2017-08-02   dj.wong              optimization
-*********************************************************************************/
+
 
 using System;
 using System.Collections.Generic;

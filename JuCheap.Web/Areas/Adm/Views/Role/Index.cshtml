@@ -1,102 +1,115 @@
 ﻿@using System.Text
 @using Hk.QrPay.Service.Dto
-
 @{
-    Layout = "/Areas/Adm/Views/Shared/_Layout_Body.cshtml";
+    Layout = null;
 }
-@section StylesBefore{
-    @Styles.Render("~/Template/Admin/jucheap/Css/DataTable")
-}
-@section Scripts{
-    @Scripts.Render("~/JS/Admin/jucheap/DataTable")
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="~/content/css/content-base.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/jqgrid/ui.jqgrid.css" rel="stylesheet" />
+    <link href="~/Content/css/plugins/datepicker/datepicker3.css" rel="stylesheet" />
 
-    <script>
-        var grid = null;
-
-        function reload() {
-            $("#go_search").trigger("click");
-        }
-        $(function() {
-            var cols = [
-                { data: "Id", name: "Id", orderable: false },
-                { data: "Name", name: "Name", orderable: true },
-                { data: "Description", name: "Description", orderable: true },
-                {
-                    data: function(e) {
-                        return e.CreateDateTime.toString().getDate();
-                    }, name: "CreateDateTime",
-                    orderable: true
-                }
-            ];
-            var config = {
-                id: "table_server",
-                url: "@Url.Action("GetList",@ViewContext.RouteData.Values)",
-                columns: cols,
-                order: [[3, "desc"]]
-            };
-            grid = new jucheap.grid(config);
-            grid.load();
-
-            $(".box-refresh").click(function() {
-                grid.reload();
-            });
-        });
-    </script>
-}
-
-<div class="row">
-    <div class="col-lg-12">
-        <div class="hidden" id="hidden_filter">
-            @* 把需要搜索的条件放到hidden里面，在table格式化完成的时候直接调用$.html()赋值，免去了在js拼接标签的麻烦 *@
-            <div class="row" style="margin-right:0;">
-                <form class="form-inline" role="form">
-                    <div class="form-group">
-                        <label class="sr-only" for="keywords">关键字</label>
-                        <input type="text" class="form-control" id="keywords" name="keywords" placeholder="角色名称" maxlength="20" />
-                    </div>
-                    <button type="button" class="btn btn-success" name="go_search">搜索</button>
-                </form>
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>角色管理</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
+                </div>
             </div>
-        </div>
-        <section class="panel">
-            <header class="panel-heading" style="margin-bottom: 10px;">
-                &nbsp;
-                <span class="tools pull-left">
+            <div class="ibox-content">
+                <div class="form-group">
+                    @* <button id="btnAdd" type="button" class="btn btn-primary " onclick="addModel()"><i class="fa fa-plus"></i>&nbsp;添加</button>
+                    <button id="btnEdit" type="button" class="btn btn-info " onclick="editModel()"><i class="fa fa-pencil"></i>编辑</button>
+                    <button id="btnDel" type="button" class="btn btn-danger " onclick="delData()">
+                        <i class="fa fa-remove"></i>&nbsp;&nbsp;<span class="bold">删除</span>
+                    </button>*@
                     @if (ViewBag.MyButtons != null)
                     {
                         List<MenuDto> btns = ViewBag.MyButtons;
-                        StringBuilder sb = new StringBuilder();
                         foreach (var btn in btns)
                         {
-                            sb.AppendFormat("<button type=\"button\" class=\"btn btn-success m-b-10\" onclick=\"jucheap.goAction(this,  '{0}', '{1}','{2}', '{3}',grid)\">{4}</button>&nbsp;&nbsp;", ViewContext.RouteData.Values["moudleId"], btn.ParentId, btn.Id, btn.Url, btn.Name);
+                            string ClassName = string.IsNullOrEmpty(btn.ClassName) ? "btn btn-success m-b-10" : btn.ClassName;
+                        <button type="button" class="@ClassName" onclick="DoWork(this,'@btn.Url','@ViewContext.RouteData.Values["moudleId"]','@btn.ParentId','@btn.Id','@btn.ExecuEvent')"><i class="@btn.Icon"></i>@btn.Name</button>
                         }
-                        @(new MvcHtmlString(sb.ToString()))
                     }
-                </span>
-                <span class="tools pull-right">
-                    <a class="fa fa-repeat box-refresh" href="javascript:;"></a>
-                    <a class="t-close fa fa-times" href="javascript:;"></a>
-                </span>
-            </header>
-            <table id="table_server" class="table responsive-data-table data-table table-hover">
-                <thead>
-                    <tr>
-                        <th style="width: 40px;">
-                            选择
-                        </th>
-                        <th>
-                            角色名称
-                        </th>
-                        <th>
-                            描述
-                        </th>
-                        <th>
-                            创建日期
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-        </section>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <input id="txtSearchKey" type="text" class="input form-control" placeholder="搜索关键字" />
+                        <span class="input-group-btn">
+                            <button id="btnSearch" class="btn btn btn-primary" type="button"><i class="fa fa-search"></i>搜索</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="jqGrid_wrapper">
+                    <table id="table_list"></table>
+                    <div id="pager_list"></div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+
+    <script src="~/Content/js/base.js"></script>
+    <script src="~/content/js/list.js"></script>
+    <script src="~/Content/js/plugins/datepicker/bootstrap-datepicker.js"></script>
+    <script>
+        function searchData() { //搜索
+            var json = {
+                keywords: $("#txtSearchKey").val()
+            };
+            XPage.Search(json);
+        }
+
+        function DoWork(obj, url, moduleId, parentId, Id, func) {
+            console.log(func + "(" + url + "," + moduleId + ", " + parentId + ", " + Id + ")");
+            eval(func + "('" + url + "','" + moduleId + "', '" + parentId + "', '" + Id + "')");
+        }
+        function Add(url, moduleId, parentId, Id) {
+            //$("#btnAdd").button("loading");
+            window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id;
+        }
+
+        function Edit(url, moduleId, parentId, Id) { //编辑
+            var row = JucheapGrid.GetData();
+            if (row != null) {
+                $("#btnEdit").button("loading");
+                window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id + "/" + row.Id;
+            } else {
+                parent.layer.alert("请选择要编辑的数据");
+            }
+        }
+
+        function Del() { //删除
+            XPage.DelData("/Adm/Role/Delete");
+        }
+
+        $(document).ready(function () {
+            var config = {
+                title: '角色列表',
+                url: '/Adm/Role/GetListWithPager',
+                colNames: ['主键', '角色名称', '角色描述'],
+                colModel: [
+                    { name: 'Id', index: 'Id', width: 60, key: true, hidden: true },
+                    { name: 'Name', index: 'Name', width: 60 },
+                    { name: 'Description', index: 'Description', width: 100 }
+                ]
+            };
+            JucheapGrid.Load(config);
+            $("#btnSearch").bind("click", searchData);
+        });
+    </script>
+</body>
+</html>
 

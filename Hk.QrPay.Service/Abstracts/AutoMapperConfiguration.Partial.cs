@@ -1,17 +1,7 @@
 
 
 
-/*******************************************************************************
-* Copyright (C)  Hk.QrPay.Com
-* 
-* Author: dj.wong
-* Create Date: 2015/8/7 11:12:12
-* Description: Automated building by service@Hk.QrPay.com 
-* 
-* Revision History:
-* Date         Author               Description
-*
-*********************************************************************************/
+
 
 using AutoMapper;
 using Hk.QrPay.Entity;

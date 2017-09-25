@@ -1,74 +1,60 @@
 ﻿@model Hk.QrPay.Service.Dto.RoleDto
 @{
     ViewBag.Title = "Add";
-    Layout = "~/Areas/Adm/Views/Shared/_Layout_Body.cshtml";
+    Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
 
-@section Scripts{
-    <script>
-        $("#submitForm").validate({
-            submitHandler: jucheap.buttonLoading,
-            rules: {
-                Name: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 20
-                },
-                Description: {
-                    required: true,
-                    minlength: 1,
-                    maxlength: 50
-                }
-            },
-            messages: {
-                Name: {
-                    required: "请输入角色名称",
-                    minlength: "最小长度为2个字符",
-                    maxlength: "最大长度为20个字符"
-                },
-                Description: {
-                    required: "请输入角色描述",
-                    minlength: "最小长度为1个字符",
-                    maxlength: "最大长度为50个字符"
-                }
-            }
-        });
-    </script>
-}
-
-<div class="row">
-    <div class="col-lg-12">
-        <section class="panel">
-            <header class="panel-heading">
-                添加角色
-            </header>
-            <div class="panel-body">
-                <div class="form">
-                    <form class="cmxform form-horizontal tasi-form" id="submitForm" method="POST" action="@Request.Url.PathAndQuery" novalidate="novalidate">
-                        @Html.HiddenFor(item => item.Id, new { @class = "form-control" })
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.Name, new {@class = "control-label col-lg-2"})
-                            <div class="col-lg-10">
-                                @Html.TextBoxFor(item => item.Name, new {@class = "form-control"})
-                            </div>
-                        </div>
-
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.Description, new {@class = "control-label col-lg-2"})
-                            <div class="col-lg-10">
-                                @Html.TextBoxFor(item => item.Description, new {@class = "form-control"})
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div class="col-lg-offset-2 col-lg-10">
-                                <button class="btn btn-success" type="submit">保存</button>
-                                <button class="btn btn-default" type="button" onclick="jucheap.goback(this)">返回</button>
-                            </div>
-                        </div>
-                    </form>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link href="/content/css/content-base.css" rel="stylesheet" />
+</head>
+<body class="gray-bg">
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>添加菜单</h5>
+                <div class="ibox-tools">
+                    <a class="collapse-link">
+                        <i class="fa fa-chevron-up"></i>
+                    </a>
                 </div>
             </div>
-        </section>
+            <div class="ibox-content">
+                <form action="@Request.Url.PathAndQuery" class="form-horizontal" method="post">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            @Html.LabelFor(item => item.Name)：</label>
+                        <div class="col-sm-8">
+                              @Html.TextBoxFor(item => item.Name, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">
+                            @Html.LabelFor(item => item.Description)：</label>
+                        <div class="col-sm-8">
+                              @Html.TextBoxFor(item => item.Description, new { @class = "form-control" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-8">
+                            <button class="btn btn-info" type="submit" id="btnSave">保存</button>
+                            <button class="btn btn-white" type="button" id="btnBack" data-type="url">返回</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-</div>
+    <script src="~/Content/js/base.js"></script>
+    <script src="~/content/js/jqueryValidate.js"></script>
+    <script src="~/content/js/menu.js"></script>
+    <script src="~/content/js/action.js"></script>
+</body>
+</html>
+
+
+

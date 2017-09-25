@@ -75,15 +75,6 @@
         }
 
         function DoWork(obj, url, moduleId, parentId, Id, func) {
-            //$(obj).button("loading");
-            //var row = JucheapGrid.GetData();
-            //if (row != null) {
-            //    $("#btnEdit").button("loading");
-            //    window.location.href = url + "/" + moduleId + "/" + parentId + "/" + Id + "/" + row.Id;
-            //} else {
-            //    parent.layer.alert("请选择要编辑的数据");
-            //}
-            //func(obj, url, moduleId, parentId, Id)
             console.log(func + "(" + url + "," + moduleId + ", " + parentId + ", " + Id + ")");
             eval(func + "('" + url + "','" + moduleId + "', '" + parentId + "', '" + Id + "')");
         }

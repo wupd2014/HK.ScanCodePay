@@ -51,7 +51,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
 
         #region Ajax
 
-        public JsonResult GetList(int moudleId, int menuId, int btnId)
+        public JsonResult GetList(string moudleId, string menuId, string btnId)
         {
             var queryBase = new QueryBase
             {
@@ -76,7 +76,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(int moudleId, int menuId, int btnId, RoleDto dto)
+        public ActionResult Edit(string moudleId, string menuId, string btnId, RoleDto dto)
         {
             roleService.Update(dto);
             return RedirectToAction("Index", RouteData.Values);
@@ -84,7 +84,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
 
 
         [HttpPost]
-        public JsonResult Delete(int moudleId, int menuId, int btnId, List<int> ids)
+        public JsonResult Delete(string moudleId, string menuId, string btnId, List<int> ids)
         {
             var res = new Result<string>();
 
@@ -120,7 +120,58 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
             res.data = list;
             return Json(res, JsonRequestBehavior.AllowGet);
         }
+        /// <param name="search">查询内容</param>
+        /// <param name="nd"></param>
+        /// <param name="rows">返回行数</param>
+        /// <param name="page">查询第几页</param>
+        /// <param name="sidx">排序字段</param>
+        /// <param name="sord">排序类型，升序降序（asc,desc)</param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetListWithPager()
+        {
+            //_search=false&nd=1505435637994&rows=15&page=1&sidx=&sord=asc
+            string _search = Request["_search"];
+            string nd = Request["nd"];
+            int rows = Request["rows"].ToInt();
+            int page = Request["page"].ToInt();
+            string sidx = Request["sidx"];
+            string sord = Request["sord"];
+            string keywords = Request["keywords"];
 
+            var queryBase = new QueryBase
+            {
+                Start = (page - 1) * rows,
+                Length = rows,
+                Draw = Request["draw"].ToInt(),
+                SearchKey = keywords
+            };
+            Expression<Func<RoleDto, bool>> exp = item => !item.IsDeleted;
+            if (!queryBase.SearchKey.IsBlank())
+                exp = exp.And(item => item.Name.Contains(queryBase.SearchKey));
+
+            string orderByStr = sidx.IsNotBlank() ? sidx : "Name";
+            var dto = roleService.GetWithPages(queryBase, exp, orderByStr, sord);
+            return Json(PageListDto<RoleDto>.GetMode(dto, rows, page), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetListWithKeywords(string keywords)
+        {
+            var queryBase = new QueryBase
+            {
+                Start = 0,
+                Length = Int32.MaxValue,
+                SearchKey = keywords
+            };
+            Expression<Func<RoleDto, bool>> exp = item => !item.IsDeleted;
+            if (!queryBase.SearchKey.IsBlank())
+                exp = exp.And(item => item.Name.Contains(queryBase.SearchKey));
+            var dto = roleService.GetWithPages(queryBase, exp, "Name", "ASC");
+            var returnObj = new { value = dto.data };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+
+        }
         #endregion
     }
 }

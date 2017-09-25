@@ -45,5 +45,9 @@ namespace Hk.QrPay.Service.Dto
 
         [DisplayName("动作")]
         public string ExecuEvent { get; set; }
+        [DisplayName("样式")]
+        public string ClassName { get; set; }
+        [DisplayName("图标")]
+        public string Icon { get; set; }
     }
 }

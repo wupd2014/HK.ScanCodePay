@@ -1,103 +1,76 @@
 ﻿@model Hk.QrPay.Service.Dto.UserDto
 @{
     ViewBag.Title = "Edit";
-    Layout = "~/Areas/Adm/Views/Shared/_Layout_Body.cshtml";
+    Layout = null;
 }
-<div class="row">
-    <div class="col-lg-12">
-        <section class="panel">
-            <header class="panel-heading">
-                编辑用户
-            </header>
-            <div class="panel-body">
-                <div class="form">
-                    <form class="cmxform form-horizontal tasi-form" id="submitForm" method="POST" action="@Request.Url.PathAndQuery" novalidate="novalidate">
-                        @Html.HiddenFor(item => item.Id, new { @class = "form-control" })
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.LoginName, new { @class = "control-label col-lg-2" })
-                            <div class="col-lg-10">
-                                @Html.TextBoxFor(item => item.LoginName, new { @class = "form-control", disabled = "disabled" })
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.Email, new { @class = "control-label col-lg-2" })
-                            <div class="col-lg-10">
-                                @Html.TextBoxFor(item => item.Email, new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.RealName, new { @class = "control-label col-lg-2" })
-                            <div class="col-lg-10">
-                                @Html.TextBoxFor(item => item.RealName, new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.Password, new { @class = "control-label col-lg-2" })
-                            <div class="col-lg-10">
-                                @Html.PasswordFor(item => item.Password, new { @class = "form-control" })
-                            </div>
-                        </div>
-                        <div class="form-group ">
-                            @Html.LabelFor(item => item.Status, new { @class = "control-label col-lg-2" })
-                            <div class="col-lg-10">
-                                @Html.EnumDropDownListFor(item => item.Status, new { @class = "form-control" })
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-lg-offset-2 col-lg-10">
-                                <button class="btn btn-success" type="submit">保存</button>
-                                <button class="btn btn-default" type="button" onclick="jucheap.goback(this)">返回</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/content/css/content-base.css" rel="stylesheet" />
+    <title></title>
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>修改用户</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
             </div>
-        </section>
+        </div>
+        <div class="ibox-content">
+            <form action="@Request.Url.PathAndQuery" class="form-horizontal" method="post">                
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">
+                       @Html.LabelFor(item => item.LoginName) ：</label>
+                    <div class="col-sm-8">
+                       @Html.TextBoxFor(item => item.LoginName, new { @class = "form-control" })
+                        @Html.HiddenFor(item => item.Id)
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">@Html.LabelFor(item => item.RealName)：</label>
+                    <div class="col-sm-8">
+                       @Html.TextBoxFor(item => item.RealName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">@Html.LabelFor(item => item.Email)：</label>
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(item => item.Email, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">@Html.LabelFor(item => item.Password)：</label>
+                    <div class="col-sm-8">
+                         @Html.TextBoxFor(item => item.Password, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"><label for="ConfirmPwd">确认密码</label>：</label>
+                    <div class="col-sm-8">
+                        <input class="form-control" data-val="true" data-val-equalto="两次输入不一致" data-val-equalto-other="*.Password" data-val-maxlength="确认密码长度不能超过12个字符" data-val-maxlength-max="12" data-val-minlength="确认密码长度不能少于6个字符" data-val-minlength-min="6" data-val-required="确认密码不能为空" id="ConfirmPwd" name="ConfirmPwd" placeholder="请再次输入登录密码" type="text" value="" />
+                        <span class="field-validation-valid" data-valmsg-for="ConfirmPwd" data-valmsg-replace="true"></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-8">
+                        <button class="btn btn-info" type="submit" id="btnSave">保存</button>
+                        <button class="btn btn-white" type="button" id="btnBack" data-type="url">返回</button>
+                    </div>
+                </div>
+</form>        
+        </div>
     </div>
 </div>
 
-@section Scripts{
-    <script>
-        $("#submitForm").validate({
-            submitHandler: jucheap.buttonLoading,
-            rules: {
-                LoginName: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 20
-                },
-                Email: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 36,
-                    email:true
-                },
-                RealName: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 20
-                }
-            },
-            messages: {
-                LoginName: {
-                    required: "请输入登录账号",
-                    minlength: "最小长度为5个字符",
-                    maxlength: "最大长度为20个字符"
-                },
-                Email: {
-                    required: "请输入注册邮箱",
-                    minlength: "最小长度为6个字符",
-                    maxlength: "最大长度为36个字符",
-                    email: "请输入正确的邮箱地址"
-                },
-                RealName: {
-                    required: "请输入真实姓名",
-                    minlength: "最小长度为2个字符",
-                    maxlength: "最大长度为20个字符"
-                }
-            }
-        });
-    </script>
-}
-
+  <script src="~/Content/js/base.js"></script>
+    <script src="~/content/js/jqueryValidate.js"></script>
+    <script src="~/content/js/menu.js"></script>
+    <script src="~/content/js/action.js"></script>
+</body>
+</html>

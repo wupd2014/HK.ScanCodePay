@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Hk.QrPay.Core.Extentions;
 using Hk.QrPay.Service.Abstracts;
 using Hk.QrPay.Service.Dto;
+using Hk.QrPay.Web.Models;
 
 namespace Hk.QrPay.Web.Areas.Adm.Controllers
 {
@@ -15,8 +16,6 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
     public class UserController : AdmBaseController
     {
         public IUserRoleService userRoleService { get; set; }
-
-        
 
         #region Page
 
@@ -39,6 +38,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         public ActionResult Edit(int moudleId, int menuId, int btnId, int id)
         {
             var model = userService.GetOne(item => item.Id == id);
+            model.Password = string.Empty;
             return View(model);
         }
 
@@ -50,9 +50,9 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         /// <param name="btnId"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult Authen(int moudleId, int menuId, int btnId, int id)
+        public ActionResult Authen(string moudleId, string menuId, string btnId, string id)
         {
-            return View();
+            return View(CurrentUser);
         }
 
         // GET: Adm/User/Login
@@ -100,7 +100,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         #region Ajax
 
         [HttpGet]
-        public JsonResult GetList(int moudleId, int menuId, int btnId)
+        public JsonResult GetList(string moudleId, string menuId, string btnId)
         {
             var queryBase = new QueryBase
             {
@@ -134,7 +134,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetMyRoles(int moudleId, int menuId, int btnId, int id)
+        public JsonResult GetMyRoles(string moudleId, string menuId, string btnId, int id)
         {
             var queryBase = new QueryBase
             {
@@ -149,7 +149,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         }
 
         [HttpGet]
-        public JsonResult GetNotMyRoles(int moudleId, int menuId, int btnId, int id)
+        public JsonResult GetNotMyRoles(string moudleId, string menuId, string btnId, int id)
         {
             var queryBase = new QueryBase
             {
@@ -167,7 +167,7 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         public JsonResult AuthenRole(int moudleId, int menuId, int btnId, int id, List<RoleDto> roles)
         {
             var dto = new Result<string>();
-            var userRoles = roles.Select(item => new UserRoleDto {UserId = id, RoleId = item.Id}).ToList();
+            var userRoles = roles.Select(item => new UserRoleDto { UserId = id, RoleId = item.Id }).ToList();
             dto.flag = userRoleService.Add(userRoles);
             return Json(dto, JsonRequestBehavior.AllowGet);
         }
@@ -243,6 +243,82 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
             }
             return Json(users, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public JsonResult GetListWithPager()
+        {
+            //_search=false&nd=1505435637994&rows=15&page=1&sidx=&sord=asc
+            string _search = Request["_search"];
+            string nd = Request["nd"];
+            int rows = Request["rows"].ToInt();
+            int page = Request["page"].ToInt();
+            string sidx = Request["sidx"];
+            string sord = Request["sord"];
+            string keywords = Request["keywords"];
+
+            var queryBase = new QueryBase
+            {
+                Start = (page - 1) * rows,
+                Length = rows,
+                Draw = Request["draw"].ToInt(),
+                SearchKey = keywords
+            };
+            Expression<Func<UserDto, bool>> exp = item => !item.IsDeleted;
+            if (!queryBase.SearchKey.IsBlank())
+                exp = exp.And(item => item.LoginName.Contains(queryBase.SearchKey));
+
+            string orderByStr = sidx.IsNotBlank() ? sidx : "LoginName";
+            var dto = userService.GetWithPages(queryBase, exp, orderByStr, sord);
+            return Json(PageListDto<UserDto>.GetMode(dto, rows, page), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public JsonResult GetListWithKeywords(string keywords)
+        {
+            var queryBase = new QueryBase
+            {
+                Start = 0,
+                Length = Int32.MaxValue,
+                SearchKey = keywords
+            };
+            Expression<Func<UserDto, bool>> exp = item => !item.IsDeleted;
+            if (!queryBase.SearchKey.IsBlank())
+                exp = exp.And(item => item.LoginName.Contains(queryBase.SearchKey));
+            var dto = userService.GetWithPages(queryBase, exp, "LoginName", "ASC");
+            var returnObj = new { value = dto.data };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+
+        }
+
+        [HttpPost]
+        public JsonResult SetUserRole(int id, List<int> roles)
+        {
+            QueryBase baseQuery = new QueryBase
+            {
+                Start = 0,
+                Length = Int32.MaxValue
+            };
+
+            var userRoleList = userRoleService.GetWithPages(baseQuery, m => m.UserId == id, "");
+
+            List<UserRoleDto> list = new List<UserRoleDto>();
+            roles.ForEach(delegate(int roleId)
+            {
+                list.Add(new UserRoleDto
+                {
+                    UserId = id,
+                    RoleId = roleId,
+                    IsDeleted = false
+                });
+            });
+
+
+           
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
 
         #endregion
     }
