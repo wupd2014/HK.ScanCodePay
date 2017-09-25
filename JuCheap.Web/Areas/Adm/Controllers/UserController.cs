@@ -16,7 +16,6 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
     public class UserController : AdmBaseController
     {
         public IUserRoleService userRoleService { get; set; }
-
         #region Page
 
         // GET: Adm/User
@@ -292,14 +291,9 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
         [HttpPost]
         public JsonResult SetUserRole(int id, List<int> roles)
         {
-            QueryBase baseQuery = new QueryBase
-            {
-                Start = 0,
-                Length = Int32.MaxValue
-            };
 
-            var userRoleList = userRoleService.GetWithPages(baseQuery, m => m.UserId == id, "");
-
+            var res = new Result<string>();
+            var HasRoleList = userRoleService.Query<int>(m => m.IsDeleted == false && m.UserId == id, m => m.RoleId, true);
             List<UserRoleDto> list = new List<UserRoleDto>();
             roles.ForEach(delegate(int roleId)
             {
@@ -311,11 +305,41 @@ namespace Hk.QrPay.Web.Areas.Adm.Controllers
                 });
             });
 
-
-           
-            return Json(null, JsonRequestBehavior.AllowGet);
+            if (!userRoleService.Delete(m => m.UserId == id))
+            {
+                res.flag = false;
+                res.data = "数据删除失败";
+            }
+            if (!userRoleService.Add(list))
+            {
+                res.flag = false;
+                res.msg = "数据添加失败";
+            }
+            return Json(res, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpPost]
+        public JsonResult UserRoleInit(int id)
+        {
+            var dto = GetUserRoleInitData(id);
+            return Json(dto, JsonRequestBehavior.AllowGet);
+        }
+
+        private object GetUserRoleInitData(int id)
+        {
+            var queryBase = new QueryBase
+            {
+                Start = Request["start"].ToInt(),
+                Length = Request["length"].ToInt(),
+                Draw = Request["draw"].ToInt(),
+                SearchKey = Request["keywords"]
+            };
+
+            var HasRoleList = userService.GetMyRoles(queryBase, id);
+            var HasNotRoleList = userService.GetNotMyRoles(queryBase, id);
+            var obj = new { HasNotRoleList = HasNotRoleList, HasRoleList = HasRoleList };
+            return obj;
+        }
 
 
 
